@@ -1,5 +1,6 @@
 list:
   values:
-    example: {{ list 1 2 3 | toYaml | nindent 6 }}
-
+    example: 
+      {{ list 1 2 3 | toYaml | indent 6}}
+# if you use `nindent 6`, it will insert newline and then indent
 my-dict: {{ dict "primitive" "my string" "complex" (dict "key1" "value1") | toYaml | nindent 2 }}
