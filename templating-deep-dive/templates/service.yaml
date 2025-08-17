@@ -1,19 +1,19 @@
-{{- range $key, $svc := (.Values.services | default dict) }}
+{{- range $key, $val := (.Values.services | default dict) }}
 {{ include "templating-deep-dive.validators.service" . }}
 ---
 # The value of the .: {{ . }} - type, port
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "templating-deep-dive.fullname" $ }}-{{ $key }}
+  name: {{ include "templating-deep-dive.fullname" $ }}-{{ $key }} #templating-deep-dive.fullname implementation requires access to the top-level context because it uses .Values
   labels:
-    {{- include "templating-deep-dive.selectorLabels" $ | nindent 4 }}
+    {{- include "templating-deep-dive.selectorLabels" $ | nindent 4 }} #templating-deep-dive.selectorLabels implementation requires access to the top-level context because it uses .Chart
 spec:
-  type: {{ .type }}
+  type: {{ .type }} # same as $val.type, the . refers to the current context in the range so $val is optional
   selector:
-    {{- include "templating-deep-dive.selectorLabels" $ | nindent 4 }}
+    {{- include "templating-deep-dive.selectorLabels" $ | nindent 4 }} #templating-deep-dive.selectorLabels implementation requires access to the top-level context because it uses .Chart
   ports:
     - protocol: TCP
-      port: {{ .port }}
+      port: {{ .port }} # same as $val.type, the . refers to the current context in the range so $val is optional
       targetPort: {{ $.Values.containerPorts.http }}
 {{- end }}
